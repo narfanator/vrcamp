@@ -11,6 +11,7 @@ public class Layout : ScriptableObject
 tower1:
   prefab: tower
   position: 1 2 3
+  rotation: 0 45 0
   children:
     child1:
       prefab: tower
@@ -66,7 +67,9 @@ monkeygym:
                 go = new GameObject(item.Key);
             }
             go.transform.SetParent(parent.transform);
-            go.transform.localPosition = ToVector3(item.Value["position"]);
+            go.transform.localPosition = ToVector3 (item.Value ["position"]);
+			go.transform.localEulerAngles = ToVector3 (item.Value ["rotation"]);
+			Debug.Log (item.Value ["rotation"]);
 
             if(item.Value["children"])
             {
