@@ -9,8 +9,26 @@ public class Layout : ScriptableObject
     {
         string layout_description = @"
 tower1:
-    prefab: tower
-    position: 1 2 3
+  prefab: tower
+  position: 1 2 3
+  children:
+    child1:
+      prefab: tower
+      position: 0 0 0
+    child2:
+      prefab: tower
+      position: 0 1 0
+      children:
+        grandchild:
+          prefab: tower
+          position: 1 0 0
+monkeygym:
+  - tower1:
+      prefab: tower
+      position: 4 4 0
+  - tower2:
+      prefab: tower
+      position: 4 5 0
 ";
 
         Node layout = Parser.Parse(layout_description);
@@ -26,10 +44,17 @@ tower1:
         {
             //Basic layout - everything this level is an object description
             GameObject go;
-            if(item.Value["prefab"])
+            if(item.Value.isArray)
+            {
+                go = new GameObject(item.Key);
+                foreach (var _item in item.Value)
+                {
+                    ApplyLayout(_item.Value, go);
+                }
+            }
+            else if(item.Value["prefab"])
             {
                 Object[] objs = AssetDatabase.LoadAllAssetsAtPath("Assets/Prefabs/" + item.Value["prefab"] + ".prefab");
-                Debug.Log(objs);
                 go = Instantiate(
                     objs[0],
                     parent.transform
@@ -42,6 +67,11 @@ tower1:
             }
             go.transform.SetParent(parent.transform);
             go.transform.localPosition = ToVector3(item.Value["position"]);
+
+            if(item.Value["children"])
+            {
+                ApplyLayout(item.Value["children"], go);
+            }
         }
     }
 

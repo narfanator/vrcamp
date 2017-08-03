@@ -191,6 +191,7 @@ namespace Maptionary
                 {
                     //TODO: Nodes should know they're an array
                     // A dash is basically "fill in this key with an array index, then a colon"
+                    n.isArray = true;
 
                     //Arrays have an annoying edge case where there's a non-indented array appearing to be at "root" level - aka, "\n- value"
                     //We have consider a case where there's multiple such arrays as values in the root node - "array1:\n- 1a\narray2:\n- 2a"
